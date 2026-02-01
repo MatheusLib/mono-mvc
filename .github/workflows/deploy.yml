@@ -1,0 +1,27 @@
+name: deploy
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy_ec2:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            if [ ! -d "$HOME/mono-mvc/.git" ]; then
+              git clone https://github.com/${{ github.repository }} "$HOME/mono-mvc"
+            fi
+            cd "$HOME/mono-mvc"
+            git pull --ff-only
+            sudo systemctl restart mono-mvc
