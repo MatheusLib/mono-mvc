@@ -24,4 +24,14 @@ jobs:
             fi
             cd "$HOME/mono-mvc"
             git pull --ff-only
+            cat > "$HOME/mono-mvc/.env" <<'EOF'
+            APP_ADDR=0.0.0.0:8080
+            DB_HOST=${{ secrets.DB_HOST }}
+            DB_PORT=${{ secrets.DB_PORT }}
+            DB_USER=${{ secrets.DB_USER }}
+            DB_PASS=${{ secrets.DB_PASS }}
+            DB_NAME=${{ secrets.DB_NAME }}
+            OTEL_EXPORTER_OTLP_ENDPOINT=${{ secrets.OTEL_EXPORTER_OTLP_ENDPOINT }}
+            OTEL_EXPORTER_OTLP_INSECURE=${{ secrets.OTEL_EXPORTER_OTLP_INSECURE }}
+            EOF
             sudo systemctl restart mono-mvc
