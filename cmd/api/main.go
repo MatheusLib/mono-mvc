@@ -65,7 +65,7 @@ func main() {
 	r.Get("/policies", policiesH.List)
 	r.Post("/policies", policiesH.Create)
 
-	r.Get("/audit-events", auditH.List)
+	r.Get("/audit/events", auditH.List)
 
 	lineageH := handlers.LineageHandler{DB: db}
 	r.Post("/lineage", lineageH.Record)
