@@ -10,6 +10,7 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/go-chi/chi/v5"
 	_ "github.com/go-sql-driver/mysql"
 
 	"mono-mvc/internal/config"
@@ -44,16 +45,35 @@ func main() {
 		_ = db.Close()
 	}()
 
-	mux := http.NewServeMux()
-	mux.HandleFunc("/health", handlers.Health)
-	mux.HandleFunc("/consents", handlers.ConsentsHandler{DB: db}.List)
-
 	logger := slog.New(slog.NewJSONHandler(os.Stdout, &slog.HandlerOptions{Level: slog.LevelInfo}))
-	handler := middleware.RequestID(middleware.Logging(logger)(middleware.Tracing(mux)))
+
+	r := chi.NewRouter()
+	r.Use(middleware.RequestID)
+	r.Use(middleware.Tracing)
+	r.Use(middleware.Logging(logger))
+
+	consentsH := handlers.ConsentsHandler{DB: db}
+	policiesH := handlers.PoliciesHandler{DB: db}
+	auditH := handlers.AuditHandler{DB: db}
+
+	r.Get("/health", handlers.Health)
+
+	r.Get("/consents", consentsH.List)
+	r.Post("/consents", consentsH.Create)
+	r.Patch("/consents/{document_id}/revoke", consentsH.Revoke)
+
+	r.Get("/policies", policiesH.List)
+	r.Post("/policies", policiesH.Create)
+
+	r.Get("/audit-events", auditH.List)
+
+	lineageH := handlers.LineageHandler{DB: db}
+	r.Post("/lineage", lineageH.Record)
+	r.Get("/lineage/export/{subject_id}", lineageH.Export)
 
 	server := &http.Server{
 		Addr:              cfg.Addr,
-		Handler:           handler,
+		Handler:           r,
 		ReadHeaderTimeout: 5 * time.Second,
 	}
 

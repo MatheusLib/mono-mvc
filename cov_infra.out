@@ -1,0 +1,7 @@
+mode: set
+mono-mvc/internal/storage/mysql.go:10.88,13.16 3 0
+mono-mvc/internal/storage/mysql.go:13.16,15.3 1 0
+mono-mvc/internal/storage/mysql.go:16.2,16.29 1 0
+mono-mvc/internal/storage/mysql.go:19.68,22.50 3 1
+mono-mvc/internal/storage/mysql.go:22.50,25.3 2 1
+mono-mvc/internal/storage/mysql.go:27.2,31.18 4 1

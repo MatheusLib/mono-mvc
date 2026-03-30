@@ -1,8 +1,10 @@
 module mono-mvc
 
-go 1.25.5
+go 1.24.11
 
 require (
+	github.com/DATA-DOG/go-sqlmock v1.5.2
+	github.com/go-chi/chi/v5 v5.2.1
 	github.com/go-sql-driver/mysql v1.9.3
 	github.com/joho/godotenv v1.5.1
 	go.opentelemetry.io/otel v1.39.0

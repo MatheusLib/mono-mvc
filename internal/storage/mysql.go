@@ -13,7 +13,10 @@ func NewMySQL(ctx context.Context, host, port, user, pass, db string) (*sql.DB, 
 	if err != nil {
 		return nil, err
 	}
+	return configure(ctx, conn)
+}
 
+func configure(ctx context.Context, conn *sql.DB) (*sql.DB, error) {
 	pingCtx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	if err := conn.PingContext(pingCtx); err != nil {
