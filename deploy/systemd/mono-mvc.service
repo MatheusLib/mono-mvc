@@ -7,7 +7,7 @@ Type=simple
 User=ec2-user
 WorkingDirectory=/home/ec2-user/mono-mvc
 EnvironmentFile=/home/ec2-user/mono-mvc/.env
-ExecStart=/usr/bin/go run ./cmd/api
+ExecStart=/home/ec2-user/mono-mvc/api
 Restart=on-failure
 RestartSec=3
 
